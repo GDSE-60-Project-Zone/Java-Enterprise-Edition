@@ -24,7 +24,10 @@
 
 
 
-    ArrayList<CustomerDTO> allCustomers= new ArrayList<>();
+//    ArrayList<CustomerDTO> allCustomers= new ArrayList<>();
+
+    ArrayList<CustomerDTO> allCustomers = (ArrayList<CustomerDTO>) request.getAttribute("customers");
+
 //    allCustomers.add(new CustomerDTO("C001","Sadun","Galle",1000));
 //    allCustomers.add(new CustomerDTO("C002","Ashan","Galle",3000));
 //    allCustomers.add(new CustomerDTO("C003","Pasan","Galle",4000));
@@ -33,18 +36,7 @@
 
 
 
-//    initialize database connection
-    Class.forName("com.mysql.jdbc.Driver");
-    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
-    PreparedStatement pstm = connection.prepareStatement("select * from Customer");
-    ResultSet rst = pstm.executeQuery();
-    while (rst.next()) {
-        String id = rst.getString("id");
-        String name = rst.getString("name");
-        String address = rst.getString("address");
-        double salary = rst.getDouble("salary");
-        allCustomers.add(new CustomerDTO(id,name,address,salary));
-    }
+
 
 
 %>
@@ -245,22 +237,23 @@
     // // So we don't want entire row text we want only segregated data
     //
     //
-    // function bindRowClickEvents() {
-    //     $("#tblCustomer>tr").click(function () {
-    //         let id = $(this).children(":eq(0)").text();
-    //         let name = $(this).children(":eq(1)").text();
-    //         let address = $(this).children(":eq(2)").text();
-    //         let salary = $(this).children(":eq(3)").text();
-    //         // console.log(id, name, address, salary);
-    //
-    //         //setting table details values to text fields
-    //         $('#txtCustomerID').val(id);
-    //         $('#txtCustomerName').val(name);
-    //         $('#txtCustomerAddress').val(address);
-    //         $('#txtCustomerSalary').val(salary);
-    //
-    //     });
-    // }
+    function bindRowClickEvents() {
+        $("#tblCustomer>tr").click(function () {
+            let id = $(this).children(":eq(0)").text();
+            let name = $(this).children(":eq(1)").text();
+            let address = $(this).children(":eq(2)").text();
+            let salary = $(this).children(":eq(3)").text();
+            // console.log(id, name, address, salary);
+
+            //setting table details values to text fields
+            $('#txtCustomerID').val(id);
+            $('#txtCustomerName').val(name);
+            $('#txtCustomerAddress').val(address);
+            $('#txtCustomerSalary').val(salary);
+
+        });
+    }
+    bindRowClickEvents();
     //
     // $("#txtCustomerID").on('keyup', function (event) {
     //     if (event.code == "Enter") {
