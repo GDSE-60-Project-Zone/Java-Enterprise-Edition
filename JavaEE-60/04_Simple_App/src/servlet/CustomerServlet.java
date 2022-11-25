@@ -76,7 +76,7 @@ public class CustomerServlet extends HttpServlet {
                 boolean b = pstm.executeUpdate() > 0;
             }
 
-            resp.sendRedirect("customer.jsp");
+            resp.sendRedirect("customer");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
