@@ -71,6 +71,11 @@
                     <th>Item Price</th>
                 </tr>
                 </thead>
+                <tr id="loader" style="display: none">
+                    <td colspan="4">
+                        <h4>Loading..!</h4>
+                    </td>
+                </tr>
                 <tbody id="tblItem">
 
                 </tbody>
@@ -142,34 +147,35 @@
     // });
 
     //Send request to db.txt
-    $("#btnText").click(function (){
+    $("#btnText").click(function () {
         $("#tblItem").empty();
         $.ajax({
-            url:'db/db.txt',
-            success:function (res){
+            url: 'db/db.txt',
+            success: function (res) {
                 let split = res.split(" ");
-                var row=`<tr><td>${split[0]}</td><td>${split[1]}</td><td>${split[2]}</td><td>${split[3]}</td></tr>`;
+                var row = `<tr><td>${split[0]}</td><td>${split[1]}</td><td>${split[2]}</td><td>${split[3]}</td></tr>`;
                 $("#tblItem").append(row);
             }
         });
     });
 
     //send request to XML file
-    $("#btnXML").click(function (){
+    $("#btnXML").click(function () {
+        $("#loader").css('display','block');
         $("#tblItem").empty();
         $.ajax({
-            url:'db/db.xml',
-            success:function (res){
-                $("#tblItem").empty();
-                let itemCount=$(res).children().children().length;
-                for (var i=0;i<itemCount;i++) {
-                   let item= $(res).children().children().eq(i);
-                   let code= item.children(":eq(0)").text();
-                   let name= item.children(":eq(1)").text();
-                   let qty= item.children(":eq(2)").text();
-                   let unitPrice= item.children(":eq(3)").text();
+            url: 'db/db.xml',
+            success: function (res) {
+                $("#loader").css('display','none');
+                let itemCount = $(res).children().children().length;
+                for (var i = 0; i < itemCount; i++) {
+                    let item = $(res).children().children().eq(i);
+                    let code = item.children(":eq(0)").text();
+                    let name = item.children(":eq(1)").text();
+                    let qty = item.children(":eq(2)").text();
+                    let unitPrice = item.children(":eq(3)").text();
 
-                    var row=`<tr><td>${code}</td><td>${name}</td><td>${qty}</td><td>${unitPrice}</td></tr>`;
+                    var row = `<tr><td>${code}</td><td>${name}</td><td>${qty}</td><td>${unitPrice}</td></tr>`;
                     $("#tblItem").append(row);
                 }
 
@@ -178,18 +184,18 @@
     });
 
 
-
     //send request to json file
-    $("#btnJSON").click(function (){
+    $("#btnJSON").click(function () {
         $("#tblItem").empty();
         $.ajax({
-            url:'db/db.json',
-            success:function (res){
+            url: 'db/db.json',
+            success: function (res) {
                 $("#tblItem").empty();
-                console.log(res);
 
-                var row=`<tr><td>${res.code}</td><td>${res.name}</td><td>${res.qty}</td><td>${res.unitPrice}</td></tr>`;
-                $("#tblItem").append(row);
+                for (let c of res) {
+                    var row = `<tr><td>${c.code}</td><td>${c.name}</td><td>${c.qty}</td><td>${c.unitPrice}</td></tr>`;
+                    $("#tblItem").append(row);
+                }
             }
         });
     });
