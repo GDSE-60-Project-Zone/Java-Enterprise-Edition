@@ -57,7 +57,7 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" id="btnText">Text Req</button>
                 <button class="btn btn-danger" id="btnXML">XML Req</button>
-                <button class="btn btn-success" id="btnJSON">Req</button>
+                <button class="btn btn-success" id="btnJSON">JSON Req</button>
             </div>
 
         </div>
@@ -173,8 +173,23 @@
                     $("#tblItem").append(row);
                 }
 
+            }
+        });
+    });
 
 
+
+    //send request to json file
+    $("#btnJSON").click(function (){
+        $("#tblItem").empty();
+        $.ajax({
+            url:'db/db.json',
+            success:function (res){
+                $("#tblItem").empty();
+                console.log(res);
+
+                var row=`<tr><td>${res.code}</td><td>${res.name}</td><td>${res.qty}</td><td>${res.unitPrice}</td></tr>`;
+                $("#tblItem").append(row);
             }
         });
     });
