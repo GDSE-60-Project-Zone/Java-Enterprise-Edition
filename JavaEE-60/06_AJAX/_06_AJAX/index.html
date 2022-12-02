@@ -119,15 +119,32 @@
         // }
 
 
-       let http= new XMLHttpRequest();
-        http.open("get","db/db.txt");
-        http.send();
-        http.onreadystatechange=function (){
-            if (http.readyState==4 && http.status==200){ // if the request completed
-                console.log("Response",http.responseText);
-                $("#display").text(http.responseText);
-            }
-        }
+        //02. send ajax request using XMLHTTPRequest Object
+
+        // let http = new XMLHttpRequest();
+        // http.open("get", "db/db.txt");
+        // http.send();
+        // http.onreadystatechange = function () {
+        //     if (http.readyState == 4 && http.status == 200) { // if the request completed
+        //         console.log("Response", http.responseText);
+        //         $("#display").text(http.responseText);
+        //     }
+        // }
+
+
+        //03. How to send ajax request using jQuery
+        // console.log("Request Started");
+        // $.ajax({
+        //     url:"db/db.txt",
+        //     async:false, //Now this ajax request is Synchronous
+        //     success:function(res){
+        //         console.log(res);
+        //         $("#display").text(res);
+        //     }
+        // });
+        // console.log("Request Ended");
+
+
 
 
 
