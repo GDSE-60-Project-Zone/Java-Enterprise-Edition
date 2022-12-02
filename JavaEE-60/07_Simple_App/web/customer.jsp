@@ -80,10 +80,10 @@
             </div>
             </form>
             <div class="btn-group">
-                <button class="btn btn-primary" id="btnCustomer" form="customerForm" formaction="customer?option=add" formmethod="post">Save Customer</button>
-                <button class="btn btn-danger" id="btnCusDelete" form="customerForm" formaction="customer?option=remove" formmethod="post">Remove</button>
-                <button class="btn btn-warning" id="btnUpdate" form="customerForm" formaction="customer?option=update" formmethod="post">Update</button>
-                <button class="btn btn-success" id="btnGetAll" form="customerForm" formaction="customer">Get All</button>
+                <button class="btn btn-primary" type="button" id="btnCustomer">Save Customer</button>
+                <button class="btn btn-danger" type="button" id="btnCusDelete">Remove</button>
+                <button class="btn btn-warning"  type="button" id="btnUpdate" >Update</button>
+                <button class="btn btn-success" type="button" id="btnGetAll" >Get All</button>
                 <button class="btn btn-danger" id="btn-clear1">Clear All</button>
             </div>
 
@@ -314,6 +314,55 @@
     //     }
     //
     // }
+
+
+
+    $("#btnCustomer").click(function(){
+       let formData= $("#customerForm").serialize();
+        $.ajax({
+           url:"customer?option=add",
+            method:"post",
+            data:formData,
+           success:function(res){
+
+           }
+        });
+
+    });
+
+
+    $("#btnCusDelete").click(function(){
+        let id = $("#txtCustomerID").val();
+        $.ajax({
+            url:"customer?id="+id+"&option=remove",
+            method:"post",
+            success:function (resp){
+
+            }
+        });
+    });
+
+
+    $("#btnUpdate").click(function (){
+        let formData= $("#customerForm").serialize();
+        $.ajax({
+            url:"customer?option=update",
+            method:"post",
+            data:formData,
+            success:function(res){
+
+            }
+        });
+    });
+
+    $("#btnGetAll").click(function (){
+        $.ajax({
+            url:"customer",
+            success:function(res){
+                console.log(res);
+            }
+        });
+    });
 
 </script>
 </body>

@@ -16,22 +16,27 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
             PreparedStatement pstm = connection.prepareStatement("select * from Customer");
             ResultSet rst = pstm.executeQuery();
+            String jsonArray="[";
             while (rst.next()) {
                 String id = rst.getString("id");
                 String name = rst.getString("name");
                 String address = rst.getString("address");
                 double salary = rst.getDouble("salary");
-                allCustomers.add(new CustomerDTO(id, name, address, salary));
+                jsonArray+="{\"id\":\""+id+"\",\"name\":\""+name+"\",\"address\":\""+address+"\",\"salary\":"+salary+"},";
             }
-//            resp.sendRedirect("customer.jsp");
-            req.setAttribute("customers",allCustomers);
-            req.getRequestDispatcher("customer.jsp").forward(req,resp);
+            String finalArray = jsonArray.substring(0, jsonArray.length() - 1);
+            finalArray+="]";
+
+            resp.addHeader("Content-Type","application/json");
+            resp.addHeader("myHeader","ijse");
+            resp.getWriter().write(finalArray);
+
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
@@ -45,7 +50,6 @@ public class CustomerServlet extends HttpServlet {
         String id = req.getParameter("id");
         String name = req.getParameter("name");
         String address = req.getParameter("address");
-        double salary = Double.parseDouble(req.getParameter("salary"));
         String option = req.getParameter("option");
 
         try {
@@ -54,12 +58,14 @@ public class CustomerServlet extends HttpServlet {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
 
             if (option.equals("add")) {
+                double salary = Double.parseDouble(req.getParameter("salary"));
                 PreparedStatement pstm = connection.prepareStatement("insert into Customer values(?,?,?,?)");
                 pstm.setObject(1, id);
                 pstm.setObject(2, name);
                 pstm.setObject(3, address);
                 pstm.setObject(4, salary);
                 boolean b = pstm.executeUpdate() > 0;
+                resp.setStatus(201);//created
 
             } else if (option.equals("remove")) {
                 PreparedStatement pstm = connection.prepareStatement("delete from Customer where id=?");
@@ -67,6 +73,7 @@ public class CustomerServlet extends HttpServlet {
                 boolean b = pstm.executeUpdate() > 0;
 
             } else if (option.equals("update")) {
+                double salary = Double.parseDouble(req.getParameter("salary"));
                 PreparedStatement pstm = connection.prepareStatement("update Customer set name=?,address=?,salary=? where id=?");
                 pstm.setObject(4, id);
                 pstm.setObject(1, name);
@@ -75,7 +82,6 @@ public class CustomerServlet extends HttpServlet {
                 boolean b = pstm.executeUpdate() > 0;
             }
 
-            resp.sendRedirect("customer");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
