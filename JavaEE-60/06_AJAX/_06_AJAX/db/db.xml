@@ -8,7 +8,37 @@
     <item>
         <code>I002</code>
         <name>Signal</name>
+        <qty>1300</qty>
+        <unitPrice>1450</unitPrice>
+    </item>
+    <item>
+        <code>I003</code>
+        <name>Dall</name>
+        <qty>3300</qty>
+        <unitPrice>4450</unitPrice>
+    </item>
+    <item>
+        <code>I004</code>
+        <name>LightBoy</name>
+        <qty>3300</qty>
+        <unitPrice>4150</unitPrice>
+    </item>
+    <item>
+        <code>I005</code>
+        <name>Sugar</name>
         <qty>300</qty>
-        <unitPrice>450</unitPrice>
+        <unitPrice>650</unitPrice>
+    </item>
+    <item>
+        <code>I006</code>
+        <name>Bread</name>
+        <qty>3020</qty>
+        <unitPrice>2450</unitPrice>
+    </item>
+    <item>
+        <code>I007</code>
+        <name>Oil</name>
+        <qty>300</qty>
+        <unitPrice>1450</unitPrice>
     </item>
 </items>

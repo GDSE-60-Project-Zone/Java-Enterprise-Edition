@@ -55,13 +55,9 @@
                 </div>
             </form>
             <div class="btn-group">
-                <button type="button" class="btn btn-primary" id="btnItem" form="itemForm" formaction="db/db.txt">Add
-                    Item
-                </button>
-                <button class="btn btn-danger" id="btnItemDelete">Remove</button>
-                <button class="btn btn-warning" id="btnItemUpdate">Update</button>
-                <button class="btn btn-success" id="btnGetAll">Get All</button>
-                <button class="btn btn-danger" id="btn-clear">Clear All</button>
+                <button type="button" class="btn btn-primary" id="btnText">Text Req</button>
+                <button class="btn btn-danger" id="btnXML">XML Req</button>
+                <button class="btn btn-success" id="btnJSON">Req</button>
             </div>
 
         </div>
@@ -87,66 +83,66 @@
 
 <script src="assets/js/jquery-3.6.1.min.js"></script>
 <script>
-    $("#btnItem").click(function () {
+    // $("#btnText").click(function () {
+    //
+    //     // //initializing XMLHttpRequest Object
+    //     // var http = new XMLHttpRequest();
+    //     // console.log("First ", http.readyState);//0 - //0
+    //     //
+    //     // //open the request
+    //     // //Synchronous = Blocking (Normal Behaviour)
+    //     // //Asynchronous = Non-Blocking (Event Loop)
+    //     // // http.open("get", 'db/db.txt',false);
+    //     // http.open("get", 'db/db.txt',true);
+    //     // //false = Synchronous
+    //     // //true = Asynchronous
+    //     //
+    //     // console.log("Second ", http.readyState);//1 - //1
+    //     //
+    //     // //send the request
+    //     // http.send();
+    //     // console.log("Third ", http.readyState);//1 - //4
+    //     //
+    //     // console.log("Response ", http.responseText); //response available
+    //     // console.log("Fourth ", http.readyState);//1 //4
+    //     //
+    //     // http.onreadystatechange=function(){
+    //     //     console.log(http.readyState); //2 //3 //4
+    //     //     console.log("On ready State Change Event Invoked");
+    //     //     if (http.readyState==4){
+    //     //         console.log("Response ", http.responseText);
+    //     //     }
+    //     // }
+    //
+    //
+    //     //02. send ajax request using XMLHTTPRequest Object
+    //
+    //     // let http = new XMLHttpRequest();
+    //     // http.open("get", "db/db.txt");
+    //     // http.send();
+    //     // http.onreadystatechange = function () {
+    //     //     if (http.readyState == 4 && http.status == 200) { // if the request completed
+    //     //         console.log("Response", http.responseText);
+    //     //         $("#display").text(http.responseText);
+    //     //     }
+    //     // }
+    //
+    //
+    //     //03. How to send ajax request using jQuery
+    //     // console.log("Request Started");
+    //     // $.ajax({
+    //     //     url:"db/db.txt",
+    //     //     async:false, //Now this ajax request is Synchronous
+    //     //     success:function(res){
+    //     //         console.log(res);
+    //     //         $("#display").text(res);
+    //     //     }
+    //     // });
+    //     // console.log("Request Ended");
+    // });
 
-        // //initializing XMLHttpRequest Object
-        // var http = new XMLHttpRequest();
-        // console.log("First ", http.readyState);//0 - //0
-        //
-        // //open the request
-        // //Synchronous = Blocking (Normal Behaviour)
-        // //Asynchronous = Non-Blocking (Event Loop)
-        // // http.open("get", 'db/db.txt',false);
-        // http.open("get", 'db/db.txt',true);
-        // //false = Synchronous
-        // //true = Asynchronous
-        //
-        // console.log("Second ", http.readyState);//1 - //1
-        //
-        // //send the request
-        // http.send();
-        // console.log("Third ", http.readyState);//1 - //4
-        //
-        // console.log("Response ", http.responseText); //response available
-        // console.log("Fourth ", http.readyState);//1 //4
-        //
-        // http.onreadystatechange=function(){
-        //     console.log(http.readyState); //2 //3 //4
-        //     console.log("On ready State Change Event Invoked");
-        //     if (http.readyState==4){
-        //         console.log("Response ", http.responseText);
-        //     }
-        // }
-
-
-        //02. send ajax request using XMLHTTPRequest Object
-
-        // let http = new XMLHttpRequest();
-        // http.open("get", "db/db.txt");
-        // http.send();
-        // http.onreadystatechange = function () {
-        //     if (http.readyState == 4 && http.status == 200) { // if the request completed
-        //         console.log("Response", http.responseText);
-        //         $("#display").text(http.responseText);
-        //     }
-        // }
-
-
-        //03. How to send ajax request using jQuery
-        // console.log("Request Started");
-        // $.ajax({
-        //     url:"db/db.txt",
-        //     async:false, //Now this ajax request is Synchronous
-        //     success:function(res){
-        //         console.log(res);
-        //         $("#display").text(res);
-        //     }
-        // });
-        // console.log("Request Ended");
-    });
-
-
-    $("#btnGetAll").click(function (){
+    //Send request to db.txt
+    $("#btnText").click(function (){
         $("#tblItem").empty();
         $.ajax({
             url:'db/db.txt',
@@ -157,6 +153,32 @@
             }
         });
     });
+
+    //send request to XML file
+    $("#btnXML").click(function (){
+        $("#tblItem").empty();
+        $.ajax({
+            url:'db/db.xml',
+            success:function (res){
+                $("#tblItem").empty();
+                let itemCount=$(res).children().children().length;
+                for (var i=0;i<itemCount;i++) {
+                   let item= $(res).children().children().eq(i);
+                   let code= item.children(":eq(0)").text();
+                   let name= item.children(":eq(1)").text();
+                   let qty= item.children(":eq(2)").text();
+                   let unitPrice= item.children(":eq(3)").text();
+
+                    var row=`<tr><td>${code}</td><td>${name}</td><td>${qty}</td><td>${unitPrice}</td></tr>`;
+                    $("#tblItem").append(row);
+                }
+
+
+
+            }
+        });
+    });
+
 
 </script>
 </body>
