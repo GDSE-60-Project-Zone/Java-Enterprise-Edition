@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="jsonp">
+    <output-path>$PROJECT_DIR$/out/artifacts/jsonp</output-path>
+    <root id="archive" name="jsonp.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="08_JSON_P" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="javax.json-api-1.1.4" />
+          <element id="library" level="project" name="mysql-connector-j-8.0.31" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="08_JSON_P/web/Web" />
+    </root>
+  </artifact>
+</component>
