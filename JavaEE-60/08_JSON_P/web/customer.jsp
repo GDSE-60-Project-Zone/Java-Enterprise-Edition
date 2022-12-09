@@ -22,9 +22,7 @@
 <%
 
 
-
-
-//    ArrayList<CustomerDTO> allCustomers= new ArrayList<>();
+    //    ArrayList<CustomerDTO> allCustomers= new ArrayList<>();
 
     ArrayList<CustomerDTO> allCustomers = (ArrayList<CustomerDTO>) request.getAttribute("customers");
 
@@ -33,10 +31,6 @@
 //    allCustomers.add(new CustomerDTO("C003","Pasan","Galle",4000));
 //    allCustomers.add(new CustomerDTO("C004","Nimesh","Galle",51000));
 //    allCustomers.add(new CustomerDTO("C005","Uvindu","Galle",6000));
-
-
-
-
 
 
 %>
@@ -58,32 +52,32 @@
         <div class="col-4">
             <h1>Customer Registraion</h1>
             <form id="customerForm">
-            <div class="form-group">
-                <label for="txtCustomerID">Customer ID</label>
-                <input class="form-control" id="txtCustomerID"  type="text" name="id">
-                <span class="control-error" id="lblcusid"></span>
-            </div>
-            <div class="form-group">
-                <label for="txtCustomerName">Customer Name</label>
-                <input class="form-control" id="txtCustomerName" type="text" name="name">
-                <span class="control-error" id="lblcusname"></span>
-            </div>
-            <div class="form-group">
-                <label for="txtCustomerAddress">Customer Address</label>
-                <input class="form-control" id="txtCustomerAddress" type="text" name="address">
-                <span class="control-error" id="lblcusaddress"></span>
-            </div>
-            <div class="form-group">
-                <label for="txtCustomerSalary">Customer Salary</label>
-                <input class="form-control" id="txtCustomerSalary" type="text" name="salary">
-                <span class="control-error" id="lblcussalary"></span>
-            </div>
+                <div class="form-group">
+                    <label for="txtCustomerID">Customer ID</label>
+                    <input class="form-control" id="txtCustomerID" type="text" name="id">
+                    <span class="control-error" id="lblcusid"></span>
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomerName">Customer Name</label>
+                    <input class="form-control" id="txtCustomerName" type="text" name="name">
+                    <span class="control-error" id="lblcusname"></span>
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomerAddress">Customer Address</label>
+                    <input class="form-control" id="txtCustomerAddress" type="text" name="address">
+                    <span class="control-error" id="lblcusaddress"></span>
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomerSalary">Customer Salary</label>
+                    <input class="form-control" id="txtCustomerSalary" type="text" name="salary">
+                    <span class="control-error" id="lblcussalary"></span>
+                </div>
             </form>
             <div class="btn-group">
                 <button class="btn btn-primary" type="button" id="btnCustomer">Save Customer</button>
                 <button class="btn btn-danger" type="button" id="btnCusDelete">Remove</button>
-                <button class="btn btn-warning"  type="button" id="btnUpdate" >Update</button>
-                <button class="btn btn-success" type="button" id="btnGetAll" >Get All</button>
+                <button class="btn btn-warning" type="button" id="btnUpdate">Update</button>
+                <button class="btn btn-success" type="button" id="btnGetAll">Get All</button>
                 <button class="btn btn-danger" id="btn-clear1">Clear All</button>
             </div>
 
@@ -99,20 +93,24 @@
                 </tr>
                 </thead>
                 <tbody id="tblCustomer">
-                    <%
-                        if(allCustomers!=null){
-                                for (CustomerDTO customer : allCustomers) {
-                    %>
-                  <tr>
-                      <td><%=customer.getId()%></td>
-                      <td><%=customer.getName()%></td>
-                      <td><%=customer.getAddress()%></td>
-                      <td><%=customer.getSalary()%></td>
-                  </tr>
-                    <%
-                            }
+                <%
+                    if (allCustomers != null) {
+                        for (CustomerDTO customer : allCustomers) {
+                %>
+                <tr>
+                    <td><%=customer.getId()%>
+                    </td>
+                    <td><%=customer.getName()%>
+                    </td>
+                    <td><%=customer.getAddress()%>
+                    </td>
+                    <td><%=customer.getSalary()%>
+                    </td>
+                </tr>
+                <%
                         }
-                    %>
+                    }
+                %>
                 </tbody>
             </table>
         </div>
@@ -130,66 +128,77 @@
 
     //Button Events
     //Add Customer
-    $("#btnCustomer").click(function(){
-       let formData= $("#customerForm").serialize();
+    $("#btnCustomer").click(function () {
+        let formData = $("#customerForm").serialize();
         $.ajax({
-           url:"customer?option=add",
-            method:"post",
-            data:formData,
-           success:function(res){
+            url: "customer",
+            method: "post",
+            data: formData,
+            success: function (res) {
                 getAllCustomers();
-           }
+            }
         });
 
     });
 
     //Delete Customer
-    $("#btnCusDelete").click(function(){
+    $("#btnCusDelete").click(function () {
         let id = $("#txtCustomerID").val();
         $.ajax({
-            url:"customer?id="+id+"&option=remove",
-            method:"post",
-            success:function (resp){
+            url: "customer?id=" + id,
+            method: "delete",
+            success: function (resp) {
                 getAllCustomers();
             }
         });
     });
 
     //Update Customer
-    $("#btnUpdate").click(function (){
-        let formData= $("#customerForm").serialize();
+    $("#btnUpdate").click(function () {
+        let cusId = $("#txtCustomerID").val();
+        let cusName = $("#txtCustomerName").val();
+        let cusAddress = $("#txtCustomerAddress").val();
+        let cusSalary = $("#txtCustomerSalary").val();
+
+        var customerOb = {
+            id: cusId,
+            name: cusName,
+            address: cusAddress,
+            salary: cusSalary
+        }
         $.ajax({
-            url:"customer?option=update",
-            method:"post",
-            data:formData,
-            success:function(res){
+            url: "customer",
+            method: "put",
+            contentType:"application/json",
+            data: JSON.stringify(customerOb),
+            success: function (res) {
                 getAllCustomers();
             }
         });
     });
 
     //Get All Customer
-    $("#btnGetAll").click(function (){
+    $("#btnGetAll").click(function () {
         getAllCustomers();
     });
 
     //Get all Customer Function
-    function getAllCustomers(){
+    function getAllCustomers() {
         $("#tblCustomer").empty();
         $.ajax({
-            url:"customer",
-            success:function(res){
+            url: "customer",
+            success: function (res) {
                 for (let c of res) {
-                    let cusID=c.id;
-                    let cusName=c.name;
-                    let cusAddress=c.address;
-                    let cusSalary=c.salary;
+                    let cusID = c.id;
+                    let cusName = c.name;
+                    let cusAddress = c.address;
+                    let cusSalary = c.salary;
 
-                    let row="<tr><td>"+cusID+"</td><td>"+cusName+"</td><td>"+cusAddress+"</td><td>"+cusSalary+"</td></tr>";
+                    let row = "<tr><td>" + cusID + "</td><td>" + cusName + "</td><td>" + cusAddress + "</td><td>" + cusSalary + "</td></tr>";
                     $("#tblCustomer").append(row);
                 }
                 bindRowClickEvents();
-                setTextFieldValues("","","","");
+                setTextFieldValues("", "", "", "");
             }
         });
     }
