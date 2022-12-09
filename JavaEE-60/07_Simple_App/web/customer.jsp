@@ -124,36 +124,12 @@
 <script src="assets/js/bootstrap.min.js"></script>
 <script>
 
+    //load all customers from the database
     getAllCustomers();
 
-    function bindRowClickEvents() {
-        $("#tblCustomer>tr").click(function () {
-            let id = $(this).children(":eq(0)").text();
-            let name = $(this).children(":eq(1)").text();
-            let address = $(this).children(":eq(2)").text();
-            let salary = $(this).children(":eq(3)").text();
-            // console.log(id, name, address, salary);
 
-            //setting table details values to text fields
-            $('#txtCustomerID').val(id);
-            $('#txtCustomerName').val(name);
-            $('#txtCustomerAddress').val(address);
-            $('#txtCustomerSalary').val(salary);
-
-        });
-    }
-
-    bindRowClickEvents();
-
-    function setTextFieldValues(id, name, address, salary) {
-        $("#txtCustomerID").val(id);
-        $("#txtCustomerName").val(name);
-        $("#txtCustomerAddress").val(address);
-        $("#txtCustomerSalary").val(salary);
-    }
-
-
-
+    //Button Events
+    //Add Customer
     $("#btnCustomer").click(function(){
        let formData= $("#customerForm").serialize();
         $.ajax({
@@ -167,7 +143,7 @@
 
     });
 
-
+    //Delete Customer
     $("#btnCusDelete").click(function(){
         let id = $("#txtCustomerID").val();
         $.ajax({
@@ -179,7 +155,7 @@
         });
     });
 
-
+    //Update Customer
     $("#btnUpdate").click(function (){
         let formData= $("#customerForm").serialize();
         $.ajax({
@@ -192,7 +168,12 @@
         });
     });
 
+    //Get All Customer
+    $("#btnGetAll").click(function (){
+        getAllCustomers();
+    });
 
+    //Get all Customer Function
     function getAllCustomers(){
         $("#tblCustomer").empty();
         $.ajax({
@@ -213,9 +194,31 @@
         });
     }
 
-    $("#btnGetAll").click(function (){
-       getAllCustomers();
-    });
+    //Bind events for the table rows function
+    function bindRowClickEvents() {
+        $("#tblCustomer>tr").click(function () {
+            let id = $(this).children(":eq(0)").text();
+            let name = $(this).children(":eq(1)").text();
+            let address = $(this).children(":eq(2)").text();
+            let salary = $(this).children(":eq(3)").text();
+            // console.log(id, name, address, salary);
+
+            //setting table details values to text fields
+            $('#txtCustomerID').val(id);
+            $('#txtCustomerName').val(name);
+            $('#txtCustomerAddress').val(address);
+            $('#txtCustomerSalary').val(salary);
+
+        });
+    }
+
+    //Set text fields values function
+    function setTextFieldValues(id, name, address, salary) {
+        $("#txtCustomerID").val(id);
+        $("#txtCustomerName").val(name);
+        $("#txtCustomerAddress").val(address);
+        $("#txtCustomerSalary").val(salary);
+    }
 
 </script>
 </body>
