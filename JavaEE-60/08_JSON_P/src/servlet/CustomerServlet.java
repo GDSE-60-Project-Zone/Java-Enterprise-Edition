@@ -43,33 +43,51 @@ public class CustomerServlet extends HttpServlet {
 
     //Query String
     // Form Data (x-www-form-urlencoded)
+    //JSON
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
         String name = req.getParameter("name");
         String address = req.getParameter("address");
+        String salary = req.getParameter("salary");
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
 
-            double salary = Double.parseDouble(req.getParameter("salary"));
             PreparedStatement pstm = connection.prepareStatement("insert into Customer values(?,?,?,?)");
             pstm.setObject(1, id);
             pstm.setObject(2, name);
             pstm.setObject(3, address);
             pstm.setObject(4, salary);
             boolean b = pstm.executeUpdate() > 0;
-            resp.setStatus(201);//created
+            if (b) {
+                JsonObjectBuilder responseObject = Json.createObjectBuilder();
+                responseObject.add("state","Ok");
+                responseObject.add("message","Successfully added..!");
+                responseObject.add("data","");
+                resp.getWriter().print(responseObject.build());
+            }
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            JsonObjectBuilder error = Json.createObjectBuilder();
+            error.add("state","Error");
+            error.add("message",e.getLocalizedMessage());
+            error.add("data","");
+            resp.getWriter().print(error.build());
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            JsonObjectBuilder error = Json.createObjectBuilder();
+            error.add("state","Error");
+            error.add("message",e.getLocalizedMessage());
+            error.add("data","");
+            resp.setStatus(500);
+            resp.getWriter().print(error.build());
         }
     }
 
 
     //Query String
+    //JSON
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
