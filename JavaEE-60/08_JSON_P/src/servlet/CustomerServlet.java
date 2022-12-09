@@ -32,12 +32,20 @@ public class CustomerServlet extends HttpServlet {
                 allCustomers.add(customer.build());
             }
             resp.addHeader("Content-Type", "application/json");
-            resp.getWriter().print(allCustomers.build());
 
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            JsonObjectBuilder job = Json.createObjectBuilder();
+            job.add("state","Ok");
+            job.add("message","Successfully Loaded..!");
+            job.add("data",allCustomers.build());
+            resp.getWriter().print(job.build());
+
+        } catch (ClassNotFoundException | SQLException e){
+            JsonObjectBuilder rjo = Json.createObjectBuilder();
+            rjo.add("state","Error");
+            rjo.add("message",e.getLocalizedMessage());
+            rjo.add("data","");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().print(rjo.build());
         }
     }
 

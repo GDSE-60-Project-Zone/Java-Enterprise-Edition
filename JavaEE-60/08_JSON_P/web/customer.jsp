@@ -211,7 +211,7 @@
         $.ajax({
             url: "customer",
             success: function (res) {
-                for (let c of res) {
+                for (let c of res.data) {
                     let cusID = c.id;
                     let cusName = c.name;
                     let cusAddress = c.address;
@@ -222,7 +222,11 @@
                 }
                 bindRowClickEvents();
                 setTextFieldValues("", "", "", "");
-            }
+            },
+            error: function (error) {
+            let message = JSON.parse(error.responseText).message;
+            alert(message);
+        }
         });
     }
 
