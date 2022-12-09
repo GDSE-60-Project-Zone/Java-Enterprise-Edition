@@ -134,7 +134,7 @@
             url: "customer",
             method: "post",
             data: formData,
-            dataType:"json",
+            dataType: "json",
             success: function (res) {
                 // invoked if the response status code is in 200 range
                 console.log("Success Method Invoked")
@@ -142,7 +142,7 @@
                 alert(res.message);
                 getAllCustomers();
             },
-            error:function(error){
+            error: function (error) {
                 // invokes if status code range is 500 range or 400 range
                 console.log("Error Method Invoked");
                 console.log(JSON.parse(error.responseText));
@@ -161,6 +161,11 @@
             method: "delete",
             success: function (resp) {
                 getAllCustomers();
+                alert(resp.message);
+            },
+            error: function (error) {
+                let message = JSON.parse(error.responseText).message;
+                alert(message);
             }
         });
     });
@@ -181,7 +186,7 @@
         $.ajax({
             url: "customer",
             method: "put",
-            contentType:"application/json",
+            contentType: "application/json",
             data: JSON.stringify(customerOb),
             success: function (res) {
                 getAllCustomers();
