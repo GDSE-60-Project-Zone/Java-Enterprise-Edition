@@ -1,6 +1,7 @@
 package servlet;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import singleton.DBConnection;
 
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -20,17 +21,18 @@ public class CustomerServlet extends HttpServlet {
 
         try {
             //How to configure DBCP pool
-            BasicDataSource bds= new BasicDataSource();
-            bds.setDriverClassName("com.mysql.jdbc.Driver");
-            bds.setUrl("jdbc:mysql://localhost:3306/company");
-            bds.setPassword("sanu1234");
-            bds.setUsername("root");
-            // how many connection
-            bds.setMaxTotal(2);
-            // how many connection should be initialized from created connections
-            bds.setInitialSize(2);
-
-            Connection connection = bds.getConnection();
+//            BasicDataSource bds= new BasicDataSource();
+//            bds.setDriverClassName("com.mysql.jdbc.Driver");
+//            bds.setUrl("jdbc:mysql://localhost:3306/company");
+//            bds.setPassword("sanu1234");
+//            bds.setUsername("root");
+//            // how many connection
+//            bds.setMaxTotal(2);
+//            // how many connection should be initialized from created connections
+//            bds.setInitialSize(2);
+//
+//            Connection connection = bds.getConnection();
+            Connection connection = DBConnection.getDbConnection().getConnection();
             PreparedStatement pstm = connection.prepareStatement("select * from Customer");
             ResultSet rst = pstm.executeQuery();
 //
