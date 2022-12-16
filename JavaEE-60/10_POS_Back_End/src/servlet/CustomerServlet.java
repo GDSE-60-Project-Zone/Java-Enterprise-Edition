@@ -31,8 +31,6 @@ public class CustomerServlet extends HttpServlet {
                 customer.add("salary", rst.getDouble("salary"));
                 allCustomers.add(customer.build());
             }
-            resp.addHeader("Content-Type", "application/json");
-            resp.addHeader("Access-Control-Allow-Origin", "*");
 
             JsonObjectBuilder job = Json.createObjectBuilder();
             job.add("state","Ok");
@@ -59,7 +57,6 @@ public class CustomerServlet extends HttpServlet {
         String name = req.getParameter("name");
         String address = req.getParameter("address");
         String salary = req.getParameter("salary");
-        resp.addHeader("Access-Control-Allow-Origin","*");
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
@@ -101,8 +98,6 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
-        resp.setContentType("application/json");
-        resp.addHeader("Access-Control-Allow-Origin","*");
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
@@ -146,7 +141,6 @@ public class CustomerServlet extends HttpServlet {
         String name = customer.getString("name");
         String address = customer.getString("address");
         String salary = customer.getString("salary");
-        resp.addHeader("Access-Control-Allow-Origin","*");
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -185,10 +179,4 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
-    @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.addHeader("Access-Control-Allow-Origin","*");
-        resp.addHeader("Access-Control-Allow-Methods","DELETE,PUT");
-        resp.addHeader("Access-Control-Allow-Headers","Content-Type");
-    }
 }

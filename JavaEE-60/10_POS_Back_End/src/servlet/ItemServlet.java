@@ -29,8 +29,7 @@ public class ItemServlet extends HttpServlet {
                 item.add("unitPrice", rst.getDouble("unitPrice"));
                 allItems.add(item.build());
             }
-            resp.addHeader("Content-Type", "application/json");
-            resp.addHeader("Access-Control-Allow-Origin", "*");
+
 
             JsonObjectBuilder job = Json.createObjectBuilder();
             job.add("state","Ok");
@@ -57,7 +56,6 @@ public class ItemServlet extends HttpServlet {
         String description = req.getParameter("description");
         String qtyOnHand = req.getParameter("qtyOnHand");
         String unitPrice = req.getParameter("unitPrice");
-        resp.addHeader("Access-Control-Allow-Origin","*");
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
@@ -99,8 +97,6 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String code = req.getParameter("code");
-        resp.setContentType("application/json");
-        resp.addHeader("Access-Control-Allow-Origin","*");
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
@@ -144,7 +140,6 @@ public class ItemServlet extends HttpServlet {
         String description = customer.getString("description");
         String qtyOnHand = customer.getString("qtyOnHand");
         String unitPrice = customer.getString("unitPrice");
-        resp.addHeader("Access-Control-Allow-Origin","*");
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -183,10 +178,4 @@ public class ItemServlet extends HttpServlet {
         }
     }
 
-    @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.addHeader("Access-Control-Allow-Origin","*");
-        resp.addHeader("Access-Control-Allow-Methods","DELETE,PUT");
-        resp.addHeader("Access-Control-Allow-Headers","Content-Type");
-    }
 }
