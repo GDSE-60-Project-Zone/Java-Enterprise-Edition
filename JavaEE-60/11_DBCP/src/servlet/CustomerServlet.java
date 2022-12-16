@@ -1,5 +1,7 @@
 package servlet;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,8 +19,18 @@ public class CustomerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
+            //How to configure DBCP pool
+            BasicDataSource bds= new BasicDataSource();
+            bds.setDriverClassName("com.mysql.jdbc.Driver");
+            bds.setUrl("jdbc:mysql://localhost:3306/company");
+            bds.setPassword("sanu1234");
+            bds.setUsername("root");
+            // how many connection
+            bds.setMaxTotal(2);
+            // how many connection should be initialized from created connections
+            bds.setInitialSize(2);
+
+            Connection connection = bds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("select * from Customer");
             ResultSet rst = pstm.executeQuery();
 //
@@ -38,7 +50,7 @@ public class CustomerServlet extends HttpServlet {
             job.add("data",allCustomers.build());
             resp.getWriter().print(job.build());
 
-        } catch (ClassNotFoundException | SQLException e){
+        } catch (SQLException e){
             JsonObjectBuilder rjo = Json.createObjectBuilder();
             rjo.add("state","Error");
             rjo.add("message",e.getLocalizedMessage());
@@ -58,9 +70,15 @@ public class CustomerServlet extends HttpServlet {
         String address = req.getParameter("address");
         String salary = req.getParameter("salary");
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
-
+            //How to configure DBCP pool
+            BasicDataSource bds= new BasicDataSource();
+            bds.setDriverClassName("com.mysql.jdbc.Driver");
+            bds.setUrl("jdbc:mysql://localhost:3306/company");
+            bds.setPassword("sanu1234");
+            bds.setUsername("root");
+            bds.setMaxTotal(2);
+            bds.setInitialSize(2);
+            Connection connection = bds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("insert into Customer values(?,?,?,?)");
             pstm.setObject(1, id);
             pstm.setObject(2, name);
@@ -74,15 +92,7 @@ public class CustomerServlet extends HttpServlet {
                 responseObject.add("data","");
                 resp.getWriter().print(responseObject.build());
             }
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder error = Json.createObjectBuilder();
-            error.add("state","Error");
-            error.add("message",e.getLocalizedMessage());
-            error.add("data","");
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().print(error.build());
-
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             JsonObjectBuilder error = Json.createObjectBuilder();
             error.add("state","Error");
             error.add("message",e.getLocalizedMessage());
@@ -99,8 +109,14 @@ public class CustomerServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
+            BasicDataSource bds= new BasicDataSource();
+            bds.setDriverClassName("com.mysql.jdbc.Driver");
+            bds.setUrl("jdbc:mysql://localhost:3306/company");
+            bds.setPassword("sanu1234");
+            bds.setUsername("root");
+            bds.setMaxTotal(2);
+            bds.setInitialSize(2);
+            Connection connection = bds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("delete from Customer where id=?");
             pstm.setObject(1, id);
             boolean b = pstm.executeUpdate() > 0;
@@ -120,7 +136,7 @@ public class CustomerServlet extends HttpServlet {
             rjo.add("data","");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().print(rjo.build());
-        } catch (ClassNotFoundException | SQLException e){
+        } catch (SQLException e){
             JsonObjectBuilder rjo = Json.createObjectBuilder();
             rjo.add("state","Error");
             rjo.add("message",e.getLocalizedMessage());
@@ -143,8 +159,14 @@ public class CustomerServlet extends HttpServlet {
         String salary = customer.getString("salary");
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
+            BasicDataSource bds= new BasicDataSource();
+            bds.setDriverClassName("com.mysql.jdbc.Driver");
+            bds.setUrl("jdbc:mysql://localhost:3306/company");
+            bds.setPassword("sanu1234");
+            bds.setUsername("root");
+            bds.setMaxTotal(2);
+            bds.setInitialSize(2);
+            Connection connection = bds.getConnection();
 
             PreparedStatement pstm = connection.prepareStatement("update Customer set name=?,address=?,salary=? where id=?");
             pstm.setObject(4, id);
@@ -169,7 +191,7 @@ public class CustomerServlet extends HttpServlet {
             rjo.add("data","");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().print(rjo.build());
-        } catch (ClassNotFoundException | SQLException e){
+        } catch (SQLException e){
             JsonObjectBuilder rjo = Json.createObjectBuilder();
             rjo.add("state","Error");
             rjo.add("message",e.getLocalizedMessage());
