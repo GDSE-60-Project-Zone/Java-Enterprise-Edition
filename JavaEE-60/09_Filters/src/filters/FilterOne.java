@@ -14,6 +14,7 @@ public class FilterOne implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         System.out.println("Filter One do Filter Method Invoked");
+        servletResponse.getWriter().print("<h1>Request Intercept By Filter One</h1>");
     }
 
     @Override
