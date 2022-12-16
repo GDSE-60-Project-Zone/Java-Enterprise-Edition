@@ -9,27 +9,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
 
-@WebServlet(urlPatterns = "/customer")
-public class CustomerServlet extends HttpServlet {
-
-    //Query String
+@WebServlet(urlPatterns = "/item")
+public class ItemServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
-            PreparedStatement pstm = connection.prepareStatement("select * from Customer");
+            PreparedStatement pstm = connection.prepareStatement("select * from Item");
             ResultSet rst = pstm.executeQuery();
 //
-            JsonArrayBuilder allCustomers = Json.createArrayBuilder();
+            JsonArrayBuilder allItems = Json.createArrayBuilder();
             while (rst.next()) {
-                JsonObjectBuilder customer = Json.createObjectBuilder();
-                customer.add("id", rst.getString("id"));
-                customer.add("name", rst.getString("name"));
-                customer.add("address", rst.getString("address"));
-                customer.add("salary", rst.getDouble("salary"));
-                allCustomers.add(customer.build());
+                JsonObjectBuilder item = Json.createObjectBuilder();
+                item.add("code", rst.getString("code"));
+                item.add("description", rst.getString("description"));
+                item.add("qtyOnHand", rst.getString("qtyOnHand"));
+                item.add("unitPrice", rst.getDouble("unitPrice"));
+                allItems.add(item.build());
             }
             resp.addHeader("Content-Type", "application/json");
             resp.addHeader("Access-Control-Allow-Origin", "*");
@@ -37,7 +35,7 @@ public class CustomerServlet extends HttpServlet {
             JsonObjectBuilder job = Json.createObjectBuilder();
             job.add("state","Ok");
             job.add("message","Successfully Loaded..!");
-            job.add("data",allCustomers.build());
+            job.add("data",allItems.build());
             resp.getWriter().print(job.build());
 
         } catch (ClassNotFoundException | SQLException e){
@@ -55,20 +53,20 @@ public class CustomerServlet extends HttpServlet {
     //JSON
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
-        String name = req.getParameter("name");
-        String address = req.getParameter("address");
-        String salary = req.getParameter("salary");
+        String code = req.getParameter("code");
+        String description = req.getParameter("description");
+        String qtyOnHand = req.getParameter("qtyOnHand");
+        String unitPrice = req.getParameter("unitPrice");
         resp.addHeader("Access-Control-Allow-Origin","*");
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
 
-            PreparedStatement pstm = connection.prepareStatement("insert into Customer values(?,?,?,?)");
-            pstm.setObject(1, id);
-            pstm.setObject(2, name);
-            pstm.setObject(3, address);
-            pstm.setObject(4, salary);
+            PreparedStatement pstm = connection.prepareStatement("insert into Item values(?,?,?,?)");
+            pstm.setObject(1, code);
+            pstm.setObject(2, description);
+            pstm.setObject(3, qtyOnHand);
+            pstm.setObject(4, unitPrice);
             boolean b = pstm.executeUpdate() > 0;
             if (b) {
                 JsonObjectBuilder responseObject = Json.createObjectBuilder();
@@ -100,14 +98,14 @@ public class CustomerServlet extends HttpServlet {
     //JSON
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
+        String code = req.getParameter("code");
         resp.setContentType("application/json");
         resp.addHeader("Access-Control-Allow-Origin","*");
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
-            PreparedStatement pstm = connection.prepareStatement("delete from Customer where id=?");
-            pstm.setObject(1, id);
+            PreparedStatement pstm = connection.prepareStatement("delete from Item where code=?");
+            pstm.setObject(1, code);
             boolean b = pstm.executeUpdate() > 0;
             if (b) {
                 JsonObjectBuilder rjo = Json.createObjectBuilder();
@@ -142,21 +140,21 @@ public class CustomerServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject customer = reader.readObject();
-        String id = customer.getString("id");
-        String name = customer.getString("name");
-        String address = customer.getString("address");
-        String salary = customer.getString("salary");
+        String code = customer.getString("code");
+        String description = customer.getString("description");
+        String qtyOnHand = customer.getString("qtyOnHand");
+        String unitPrice = customer.getString("unitPrice");
         resp.addHeader("Access-Control-Allow-Origin","*");
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "sanu1234");
 
-            PreparedStatement pstm = connection.prepareStatement("update Customer set name=?,address=?,salary=? where id=?");
-            pstm.setObject(4, id);
-            pstm.setObject(1, name);
-            pstm.setObject(2, address);
-            pstm.setObject(3, salary);
+            PreparedStatement pstm = connection.prepareStatement("update Item set description=?,qtyOnHand=?,unitPrice=? where code=?");
+            pstm.setObject(4, code);
+            pstm.setObject(1, description);
+            pstm.setObject(2, qtyOnHand);
+            pstm.setObject(3, unitPrice);
             boolean b = pstm.executeUpdate() > 0;
             if (b) {
                 JsonObjectBuilder responseObject = Json.createObjectBuilder();
