@@ -4,19 +4,19 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
-//@WebFilter(urlPatterns = "/b")
-public class FilterTwo implements Filter {
+@WebFilter(urlPatterns = "/b")
+public class FilterThree implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        System.out.println("Filter Two Initialized");
+        System.out.println("Filter Three Initialized");
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("Filter Two do Filter Method Invoked");
+        System.out.println("Filter Three do Filter Method Invoked");
         String name = servletRequest.getParameter("name");
         if (name.equals("ijse")){
-            servletResponse.getWriter().write("<h1>Authenticated User</h1>");
+            filterChain.doFilter(servletRequest,servletResponse);
         }else{
             servletResponse.getWriter().write("<h1>Non Authenticated User</h1>");
         }
