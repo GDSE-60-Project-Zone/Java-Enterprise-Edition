@@ -13,5 +13,6 @@ public class A extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("Servlet A Get method Invoked");
+        resp.getWriter().write("<h1>A : DO GET Called</h1>");
     }
 }
