@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import singleton.DBConnection;
 
 import javax.json.*;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,8 +20,8 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try (  Connection connection = DBConnection.getDbConnection().getConnection();){
-
+        ServletContext servletContext = getServletContext();
+        try (  Connection connection = ((BasicDataSource) servletContext.getAttribute("dbcp")).getConnection();){
             PreparedStatement pstm = connection.prepareStatement("select * from Customer");
             ResultSet rst = pstm.executeQuery();
             JsonArrayBuilder allCustomers = Json.createArrayBuilder();
@@ -60,7 +61,8 @@ public class CustomerServlet extends HttpServlet {
         String name = req.getParameter("name");
         String address = req.getParameter("address");
         String salary = req.getParameter("salary");
-        try ( Connection connection = DBConnection.getDbConnection().getConnection();){
+        BasicDataSource dbcp = (BasicDataSource) getServletContext().getAttribute("dbcp");
+        try ( Connection connection = dbcp.getConnection()){
             PreparedStatement pstm = connection.prepareStatement("insert into Customer values(?,?,?,?)");
             pstm.setObject(1, id);
             pstm.setObject(2, name);
