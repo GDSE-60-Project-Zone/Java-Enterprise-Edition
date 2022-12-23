@@ -19,23 +19,10 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try {
-            //How to configure DBCP pool
-//            BasicDataSource bds= new BasicDataSource();
-//            bds.setDriverClassName("com.mysql.jdbc.Driver");
-//            bds.setUrl("jdbc:mysql://localhost:3306/company");
-//            bds.setPassword("sanu1234");
-//            bds.setUsername("root");
-//            // how many connection
-//            bds.setMaxTotal(2);
-//            // how many connection should be initialized from created connections
-//            bds.setInitialSize(2);
-//
-//            Connection connection = bds.getConnection();
-            Connection connection = DBConnection.getDbConnection().getConnection();
+        try (  Connection connection = DBConnection.getDbConnection().getConnection();){
+
             PreparedStatement pstm = connection.prepareStatement("select * from Customer");
             ResultSet rst = pstm.executeQuery();
-//
             JsonArrayBuilder allCustomers = Json.createArrayBuilder();
             while (rst.next()) {
                 JsonObjectBuilder customer = Json.createObjectBuilder();
@@ -45,6 +32,8 @@ public class CustomerServlet extends HttpServlet {
                 customer.add("salary", rst.getDouble("salary"));
                 allCustomers.add(customer.build());
             }
+            //release the connection back to the pool
+//            connection.close();
 
             JsonObjectBuilder job = Json.createObjectBuilder();
             job.add("state","Ok");
@@ -71,16 +60,7 @@ public class CustomerServlet extends HttpServlet {
         String name = req.getParameter("name");
         String address = req.getParameter("address");
         String salary = req.getParameter("salary");
-        try {
-            //How to configure DBCP pool
-            BasicDataSource bds= new BasicDataSource();
-            bds.setDriverClassName("com.mysql.jdbc.Driver");
-            bds.setUrl("jdbc:mysql://localhost:3306/company");
-            bds.setPassword("sanu1234");
-            bds.setUsername("root");
-            bds.setMaxTotal(2);
-            bds.setInitialSize(2);
-            Connection connection = bds.getConnection();
+        try ( Connection connection = DBConnection.getDbConnection().getConnection();){
             PreparedStatement pstm = connection.prepareStatement("insert into Customer values(?,?,?,?)");
             pstm.setObject(1, id);
             pstm.setObject(2, name);
@@ -110,15 +90,7 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
-        try {
-            BasicDataSource bds= new BasicDataSource();
-            bds.setDriverClassName("com.mysql.jdbc.Driver");
-            bds.setUrl("jdbc:mysql://localhost:3306/company");
-            bds.setPassword("sanu1234");
-            bds.setUsername("root");
-            bds.setMaxTotal(2);
-            bds.setInitialSize(2);
-            Connection connection = bds.getConnection();
+        try ( Connection connection = DBConnection.getDbConnection().getConnection();){
             PreparedStatement pstm = connection.prepareStatement("delete from Customer where id=?");
             pstm.setObject(1, id);
             boolean b = pstm.executeUpdate() > 0;
@@ -160,16 +132,7 @@ public class CustomerServlet extends HttpServlet {
         String address = customer.getString("address");
         String salary = customer.getString("salary");
 
-        try {
-            BasicDataSource bds= new BasicDataSource();
-            bds.setDriverClassName("com.mysql.jdbc.Driver");
-            bds.setUrl("jdbc:mysql://localhost:3306/company");
-            bds.setPassword("sanu1234");
-            bds.setUsername("root");
-            bds.setMaxTotal(2);
-            bds.setInitialSize(2);
-            Connection connection = bds.getConnection();
-
+        try ( Connection connection = DBConnection.getDbConnection().getConnection();){
             PreparedStatement pstm = connection.prepareStatement("update Customer set name=?,address=?,salary=? where id=?");
             pstm.setObject(4, id);
             pstm.setObject(1, name);

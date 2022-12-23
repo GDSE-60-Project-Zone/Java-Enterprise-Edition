@@ -9,6 +9,7 @@ public class DBConnection {
     private static DBConnection dbConnection;
     BasicDataSource bds;
     private DBConnection(){
+        //How to configure DBCP pool
         bds= new BasicDataSource();
         bds.setDriverClassName("com.mysql.jdbc.Driver");
         bds.setUrl("jdbc:mysql://localhost:3306/company");
