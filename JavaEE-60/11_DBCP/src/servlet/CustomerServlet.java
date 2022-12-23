@@ -1,7 +1,6 @@
 package servlet;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import singleton.DBConnection;
 
 import javax.json.*;
 import javax.servlet.ServletContext;
@@ -19,9 +18,7 @@ public class CustomerServlet extends HttpServlet {
     //Query String
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        ServletContext servletContext = getServletContext();
-        try (  Connection connection = ((BasicDataSource) servletContext.getAttribute("dbcp")).getConnection();){
+        try (  Connection connection = ((BasicDataSource)  getServletContext().getAttribute("dbcp")).getConnection();){
             PreparedStatement pstm = connection.prepareStatement("select * from Customer");
             ResultSet rst = pstm.executeQuery();
             JsonArrayBuilder allCustomers = Json.createArrayBuilder();
@@ -61,8 +58,8 @@ public class CustomerServlet extends HttpServlet {
         String name = req.getParameter("name");
         String address = req.getParameter("address");
         String salary = req.getParameter("salary");
-        BasicDataSource dbcp = (BasicDataSource) getServletContext().getAttribute("dbcp");
-        try ( Connection connection = dbcp.getConnection()){
+
+        try ( Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();){
             PreparedStatement pstm = connection.prepareStatement("insert into Customer values(?,?,?,?)");
             pstm.setObject(1, id);
             pstm.setObject(2, name);
@@ -92,7 +89,7 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
-        try ( Connection connection = DBConnection.getDbConnection().getConnection();){
+        try( Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();) {
             PreparedStatement pstm = connection.prepareStatement("delete from Customer where id=?");
             pstm.setObject(1, id);
             boolean b = pstm.executeUpdate() > 0;
@@ -134,7 +131,7 @@ public class CustomerServlet extends HttpServlet {
         String address = customer.getString("address");
         String salary = customer.getString("salary");
 
-        try ( Connection connection = DBConnection.getDbConnection().getConnection();){
+        try( Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();) {
             PreparedStatement pstm = connection.prepareStatement("update Customer set name=?,address=?,salary=? where id=?");
             pstm.setObject(4, id);
             pstm.setObject(1, name);

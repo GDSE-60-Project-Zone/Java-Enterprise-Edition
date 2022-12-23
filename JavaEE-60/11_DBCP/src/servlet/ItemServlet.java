@@ -1,6 +1,7 @@
 package servlet;
 
-import singleton.DBConnection;
+import org.apache.commons.dbcp2.BasicDataSource;
+
 
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -16,7 +17,8 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try ( Connection connection = DBConnection.getDbConnection().getConnection();){
+
+        try ( Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
             PreparedStatement pstm = connection.prepareStatement("select * from Item");
             ResultSet rst = pstm.executeQuery();
 //
@@ -56,7 +58,7 @@ public class ItemServlet extends HttpServlet {
         String description = req.getParameter("description");
         String qtyOnHand = req.getParameter("qtyOnHand");
         String unitPrice = req.getParameter("unitPrice");
-        try ( Connection connection = DBConnection.getDbConnection().getConnection();){
+        try( Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
             PreparedStatement pstm = connection.prepareStatement("insert into Item values(?,?,?,?)");
             pstm.setObject(1, code);
             pstm.setObject(2, description);
@@ -86,7 +88,7 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String code = req.getParameter("code");
-        try( Connection connection = DBConnection.getDbConnection().getConnection();) {
+        try( Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("delete from Item where code=?");
             pstm.setObject(1, code);
             boolean b = pstm.executeUpdate() > 0;
@@ -121,7 +123,7 @@ public class ItemServlet extends HttpServlet {
         String qtyOnHand = customer.getString("qtyOnHand");
         String unitPrice = customer.getString("unitPrice");
 
-        try ( Connection connection = DBConnection.getDbConnection().getConnection();){
+        try( Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
             PreparedStatement pstm = connection.prepareStatement("update Item set description=?,qtyOnHand=?,unitPrice=? where code=?");
             pstm.setObject(4, code);
             pstm.setObject(1, description);
