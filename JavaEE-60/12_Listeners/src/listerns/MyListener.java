@@ -29,3 +29,4 @@ public class MyListener implements ServletContextListener {
 //When the destroy method invoked in a Servlet
 //How to put values inside a Servlet Container
 //Why we need to use ServletContextListener
+//What are the responsibilities of a servlet container.?
